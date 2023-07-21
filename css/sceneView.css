@@ -1,0 +1,240 @@
+/* Base CSS */
+
+:root {
+	--blue: rgb(103,196,255); /* Right */
+	--red: rgb(232,107,88); /* Left */
+}
+#bgAni {
+    width: 1920px; height: 1080px;
+    position: absolute;
+    display: none;
+    left: 0; right: 0; top: 0; bottom: 0;
+    z-index: -1;
+}
+#sceneViewPage {
+    position: absolute;
+    top: 0; left: 0;
+    width: 1920px; height: 1080px;
+}
+#spectatorViewPage {
+    position: absolute;
+    width:1920px; height:720px;
+    position:absolute;
+    top:200px; left: 0;
+    background-color:rgb(0,177,64);
+    transition: 500ms ease-in-out;
+    z-index: 2;
+}
+
+/* Team Names */
+.teamName {
+    font-family: "QTV-B", Helvetica, sans-serif;
+    font-size: 50px;
+    position: absolute;
+    top: 40px;
+    color: white;
+}
+#teamRedName { left: 165px; }
+#teamBlueName  { right: 165px; }
+
+/* Team Icons */
+.teamIcon {
+    position: absolute;
+    top: 45px;
+    width: 90px; height: 90px;
+    border: 3px double white;
+    border-radius: 20px;
+}
+#teamRedIcon { left: 45px; }
+#teamBlueIcon { right: 45px; }
+
+/* Stars */
+.star {
+    width: 12px; height: 12px;
+    position: absolute;
+    border: 3px solid white;
+    transform: rotate(45deg);
+}
+.starFill { background-color: white; transition: 0.5s ease-in-out; }
+.teamStar { transition: 500ms ease-in-out; position: absolute; }
+#teamRedStars { left: 102px; }
+#teamBlueStars { right: 102px; }
+
+/* Map Information */
+#mapInformation {
+    position: absolute; bottom: 0;
+    width: 450px; height: 86px;
+    background-color: white;
+    background-size: 100%;
+    transition: 500ms ease-in-out;
+    font-family: "QTV-B", Helvetica, sans-serif;
+}
+#mapInformationLayer {
+    width: inherit; height: inherit;
+    background-color: rgba(0,0,0,0.5);
+}
+#mapPick {
+    position: absolute;
+    top: -33px;
+    color: white;
+    font-size: 24px;
+    left: 15px;
+}
+#mapNameWrapper {
+    display: inline-block;
+    position:absolute;
+    bottom: 15px; left: 15px;
+	margin:auto;
+    white-space: nowrap;
+    overflow: hidden;
+    width:420px; height:32px;
+}
+#mapName {
+    color: white;
+    font-size: 30px;
+    position:relative;
+    display:inline-block;
+	width:max-content;
+}
+.mapNameWrap {
+    transform: translate(420px);
+    animation: displaySlide 12s linear infinite;
+}
+@keyframes displaySlide {
+    0% {transform: translate(0px);}
+    11% {transform: translate(0px);}
+    80% { transform: translate(calc(-100% + 420px)); }
+    100% { transform: translate(calc(-100% + 420px)); }
+}
+#mapSet {
+    font-size: 24px;
+    color: white;
+    position: absolute;
+    bottom: 47px; left: 15px;
+}
+#mapStatsCS,
+#mapStatsAR,
+#mapStatsOD,
+#mapStatsLen,
+#mapStatsBPM,
+#mapStatsSR {
+    color: rgb(232,107,88);
+}
+.mapStatsLine { color: white; }
+#mapStatsCSAROD {
+    position: absolute;
+    bottom: 38px; left: 465px;
+    font-size: 20px;
+    width: max-content;
+}
+#mapStatsLenBPMSR {
+    position: absolute;
+    bottom: 15px; left: 465px;
+    width: max-content;
+    font-size: 20px;
+}
+
+/* Score Bar Section - Moving Score Bars*/
+#movingScoreBars {
+	position:absolute;
+	width:1920px;
+    top: 920px;
+    height:20px;
+    transition: 0.5s ease-in-out;
+}
+.movingScoreBar {
+    position:absolute;
+	width:960px; height:20px;
+    max-width:50%;
+    transition: width 0.07s;
+}
+#movingScoreBarRed {
+	float: right;
+	right: 50%;
+	background-color: var(--red);
+	color: var(--red);
+}
+#movingScoreBarBlue {
+	left:50%;
+	background-color: var(--blue);
+	color: var(--blue);
+}
+#playScores {
+    position:absolute;
+	width:1920px;
+    top: 945px;
+    height:12px;
+    transition: 0.5s ease-in-out;
+}
+.playScore {
+	position: absolute;
+    font-family: FredokaO;
+    transition: ease-in-out 500ms;
+    font-size: 35px;
+}
+#playScoreRed {
+	right: 970px;	
+	color: var(--red);
+}
+#playScoreBlue {
+	left: 970px;	
+	color: var(--blue);
+}
+
+/* Chat */
+#chatDisplay {
+    position: absolute;
+    bottom: 0; right: 0;
+    width: 590px; height: 150px;
+    background-color: rgba(0,0,0,0.5);
+    font-family: "QTV-B", Helvetica, sans-serif;
+    overflow-x: hidden; overflow-y: scroll;
+	padding: 5px 12px;
+    transition: ease-in-out 500ms;
+}
+.messageWrapper {
+	display: flex;
+	text-align: left;
+}
+.messageTime {
+	width: 8%;
+	color: silver;
+	padding-right: 10px;
+}
+.wholeMessage {
+	width: 92%;
+	display: flex;
+}
+.messageUser {
+	color: white;
+	white-space: nowrap;
+	width: max-content;
+}
+.messageText {
+    color: white;
+	white-space: normal;
+	word-wrap: break-word;
+	overflow: hidden;
+}
+/* Colours Taken From https://github.com/VictimCrasher/static/tree/master/WaveTournament */
+.unknown { color: yellow; }
+.bot { color: #FF66AA; }
+.left { color: var(--red); }
+.right { color: var(--blue); }
+
+
+/* Scrollbar Related Things - Taken from https://github.com/VictimCrasher/static/tree/master/WaveTournament */
+::-webkit-scrollbar { width: 10px; }
+::-webkit-scrollbar-track {
+    margin-top: 25px;
+    margin-bottom: 25px;
+	visibility: 0;
+}
+::-webkit-scrollbar-thumb {
+	background: rgba(0,0,0,0);
+	border-radius: 10px;
+}
+.text{
+    display: flex;
+    justify-content: center;
+}
