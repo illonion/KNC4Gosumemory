@@ -1,18 +1,157 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Gosumemory</title>
 
-    <script src="deps/countUp.js"></script>
-    <script src="deps/reconnecting-websocket.min.js"></script>
-    <link rel="stylesheet" href="css/style.css">
-</head>
-<body>
-    <div id="main">
-        
-    </div>
-    <script src="js/index.js"></script>
-</body>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;600&display=swap" rel="stylesheet">
+
+        <link rel="stylesheet" href="css/index.css">
+        <link rel="stylesheet" href="css/mappoolTemplateGenerator.css">
+        <link rel="stylesheet" href="css/mappoolGenerator.css">
+        <link rel="stylesheet" href="css/sceneView.css">
+        <link rel="stylesheet" href="css/mappoolViewPage.css">
+        <link rel="stylesheet" href="css/navBar.css">
+
+        <script src="deps/countUp.js"></script>
+        <script src="deps/reconnecting-websocket.min.js"></script>
+    </head>
+    <body>
+        <div id="mappoolTemplateGeneratorPage">
+            <h1 class="templateContentPosition">Mappool Template</h1>
+            <div class="templateContentPosition" id="templateGeneratorButtons">
+                <button class="mappoolModTemplateGeneratorButton templateGeneratorButtons" id="addMappoolModTemplate">Add a Mod</button>
+                <button class="mappoolModTemplateGeneratorButton templateGeneratorButtons" id="removeMappoolModTemplate">Remove a Mod</button>
+                <button class="mappoolModTemplateGeneratorButton templateGeneratorButtons" id="removeAllMappoolModTemplate">Remove all Mods</button>
+            </div>
+            <div class="templateContentPosition" id="mappoolModTemplateGeneratorNormalMappool">
+                <button class="templateGeneratorButtons mappoolModTemplateGeneratorMappoolFormats" id="NM" onclick="addNewMappoolModTemplate('NM')">NM</button>
+                <button class="templateGeneratorButtons mappoolModTemplateGeneratorMappoolFormats" id="HD" onclick="addNewMappoolModTemplate('HD')">HD</button>
+                <button class="templateGeneratorButtons mappoolModTemplateGeneratorMappoolFormats" id="HR" onclick="addNewMappoolModTemplate('HR')">HR</button>
+                <button class="templateGeneratorButtons mappoolModTemplateGeneratorMappoolFormats" id="DT" onclick="addNewMappoolModTemplate('DT')">DT</button>
+                <button class="templateGeneratorButtons mappoolModTemplateGeneratorMappoolFormats" id="EZ" onclick="addNewMappoolModTemplate('EZ')">EZ</button>
+                <button class="templateGeneratorButtons mappoolModTemplateGeneratorMappoolFormats" id="FL" onclick="addNewMappoolModTemplate('FL')">FL</button>
+                <button class="templateGeneratorButtons mappoolModTemplateGeneratorMappoolFormats" id="FM" onclick="addNewMappoolModTemplate('FM')">FM</button>
+                <button class="templateGeneratorButtons mappoolModTemplateGeneratorMappoolFormats" id="TB" onclick="addNewMappoolModTemplate('TB')">TB</button>
+            </div>
+            <div class="templateContentPosition" id="mappoolModTemplateGeneratorManiaMappool">
+                <button class="templateGeneratorButtons mappoolModTemplateGeneratorMappoolFormats" id="RC" onclick="addNewMappoolModTemplate('RC')">RC</button>
+                <button class="templateGeneratorButtons mappoolModTemplateGeneratorMappoolFormats" id="HB" onclick="addNewMappoolModTemplate('HB')">HB</button>
+                <button class="templateGeneratorButtons mappoolModTemplateGeneratorMappoolFormats" id="LN" onclick="addNewMappoolModTemplate('LN')">LN</button>
+                <button class="templateGeneratorButtons mappoolModTemplateGeneratorMappoolFormats" id="SV" onclick="addNewMappoolModTemplate('SV')">SV</button>
+            </div>
+            <div class="templateContentPosition" id="mappoolModTemplateGeneratorTournamentTemplates">
+                <button class="templateGeneratorButtons" id="mappoolModTemplateManiaTournament" onclick="removeAllMappoolModTemplate(); addNewMappoolModTemplate('RC'); addNewMappoolModTemplate('HB'); addNewMappoolModTemplate('LN'); addNewMappoolModTemplate('SV'); addNewMappoolModTemplate('TB'); ">Maina Tournament Template</button>
+                <button class="templateGeneratorButtons" id="mappoolModTemplateOtherTournaments" onclick="removeAllMappoolModTemplate(); addNewMappoolModTemplate('NM'); addNewMappoolModTemplate('HD'); addNewMappoolModTemplate('HR'); addNewMappoolModTemplate('DT'); addNewMappoolModTemplate('FM'); addNewMappoolModTemplate('TB');">Other Tournament Templates</button>    
+            </div>
+            <br>
+            <p class="templateContentPosition">
+                - At least one mod is required.<br>
+                - Abbreviations must not be longer than 10 characters long.<br>
+                - Number of maps per mod must not exceed 15.
+            </p>
+            <button class="templateContentPosition templateGeneratorButtons nextPageButton" onclick="validateMappolModGenerator()">Next Page</button>
+        </div>
+
+
+        <div id="mappoolGeneratorPage"></div>
+
+
+        <div id="mappoolDownloadPage">
+            <p id="mappoolDownloadPageParagraph">Hello! The generation for the mappool is successful. The download should happen automatically. If not, click the download links below.<br><BR>
+                There are two files which needs to be downloaded. One is the mappool file and one is the mod order file.
+                Go to the folder which the website is hosted in: ../static/"tournament name". You should see an "index.html" file and a bunch of other files.
+                Please place both files into that folder. After you have imported into the files, click on the button below to load the file!<br><br>
+            </p>
+        </div>
+
+        <video id="bgAni" autoplay loop muted>
+            <source src="static/background.mp4" type="video/mp4">
+        </video>
+        <div id="sceneViewPage">
+            <section id="top">
+                <div id="teamRed">
+                    <img class="teamIcon" id="teamRedIcon">
+                    <div class="teamName" id="teamRedName"></div>
+                    <div class="teamStar" id="teamRedStars"></div>
+                </div>
+                <div id="teamBlue">
+                    <img class="teamIcon" id="teamBlueIcon">
+                    <div class="teamName" id="teamBlueName"></div>
+                    <div class="teamStar" id="teamBlueStars"></div>
+                </div>
+            </section>
+            <div id="mappoolViewPage"></div>    
+            <div id="spectatorViewPage"></div>
+            <div id="mapDisplay">
+                <div id="mapChooserTeam"></div>
+                <div id="mapDisplayMapContainer">
+                    <div id="mapDisplayMapImage"><div id="mapDisplayMapImageLayer"></div></div>
+                    <div id="mapDisplayMapTitleWrapper"><div id="mapDisplayMapTitle"></div></div>
+                    <div id="mapDisplayMapDifficulty">difficulty: <span id="mapDisplayMapDifficultyWrapper"><span id="mapDisplayMapDifficultyName"></span></span></div>
+                    <div id="mapDisplayMapMapper">set by: <span id="mapDisplayMapMapperWrapper"><span id="mapDisplayMapMapperName"></span></span></div>
+                    <img id="mapDisplayMapMod">
+                </div>
+            </div>
+            <section id="bottom">
+                <div id="mapInformation">
+                    <div id="mapPick">Picked By: <span id="mapPicker"></span></div>
+                    <div id="mapInformationLayer"></div>
+                    <div id="mapNameWrapper">
+                        <div id="mapName"></div>
+                    </div>
+                    <div id="mapSet">set by <span id="mapSetMapper"></span></div>
+                    <div class="mapStatsLine" id="mapStatsCSAROD">CS: <span class="mapStatsIndiv" id="mapStatsCS"></span> / AR: <span class="mapStatsIndiv" id="mapStatsAR"></span> / OD: <span class="mapStatsIndiv" id="mapStatsOD"></span></div>
+                    <div class="mapStatsLine" id="mapStatsLenBPMSR">Length: <span class="mapStatsIndiv" id="mapStatsLen"></span> / BPM: <span class="mapStatsIndiv" id="mapStatsBPM"></span> / Star: <span class="mapStatsIndiv" id="mapStatsSR"></span></div>
+                </div>
+                <div id="movingScoreBars">
+                    <div class="movingScoreBar" id="movingScoreBarRed"></div>
+                    <div class="movingScoreBar" id="movingScoreBarBlue"></div>
+                </div>
+                <div id="playScores">
+                    <div class="playScore" id="playScoreRed"></div>
+                    <div class="playScore" id="playScoreBlue"></div>
+                </div>
+                <div id="chatDisplay"></div>
+            </section>
+        </div>
+        <div id="navBar">
+            <div class="navBarViews">
+                <button class="navButton" onclick="toSpectatorView();">Spectator View</button>
+                <button class="navButton" onclick="toMappoolView();">Mappool View</button>
+            </div>
+            <div id="pickBans">
+                <select size="5">
+                    <option id="redProtect">Red Protect</option>
+                    <option id="blueProtect">Blue Protect</option>
+                    <option id="redBan">Red Ban</option>
+                    <option id="blueBan">Blue Ban</option>
+                    <option id="redPick">Red Pick</option>
+                    <option id="bluePick">Blue Pick</option>
+                    <option id="removeSelection">Remove Selection</option>
+                </select>
+            </div>
+            <div class="navBarViews" id="resetPicksBans">
+                <button class="navButton" onclick="resetPicksBansQuestion();">Reset Picks and Bans</button>
+            </div>
+            <div class="navBarViews" >
+                <button class="navButton" onclick="mapDisplayMapOn();">Map Display On</button>
+                <button class="navButton" onclick="mapDisplayMapOff();">Map Display Off</button>
+            </div>
+            <div class="navBarViews" id="newMappoolCreation">
+                <button class="navButton" onclick="toSceneView();">To Scene View</button>
+                <button class="navButton" onclick="createNewMappool();">Create New Mappool</button>
+            </div>
+        </div>
+
+        <script src="js/index.js"></script>
+        <script src="js/mappoolModGeneratorPage.js"></script>
+        <script src="js/mappoolGeneratorPage.js"></script>
+        <script src="js/mappoolViewPage.js"></script>
+        <script src="js/sceneView.js"></script>
+    </body>
 </html>
