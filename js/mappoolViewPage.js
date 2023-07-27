@@ -1,7 +1,6 @@
 let mappoolTemplateGeneratorPage = document.getElementById("mappoolTemplateGeneratorPage");
 let mappoolViewPage = document.getElementById("mappoolViewPage");
 let sceneViewPage = document.getElementById("sceneViewPage");
-let bgAni = document.getElementById("bgAni");
 sceneViewPage.style.display = "none";
 let allBeatmaps = [];
 
@@ -25,7 +24,6 @@ async function loadBeatmaps() {
         beatmapRequest.onload = function() {
             if (this.status == 404) return;
             sceneViewPage.style.display = "block";
-            bgAni.style.display = "block";
             mappoolTemplateGeneratorPage.style.display = "none";
             beatmapsLoadMappoolView = JSON.parse(this.responseText);
             loadBeatmapsIntoMods(beatmapsLoadMappoolView, modsLoadMappoolView);
