@@ -1,5 +1,3 @@
-let apiKey = getAPIKey();
-
 // Socket Events
 // Credits: VictimCrasher - https://github.com/VictimCrasher/static/tree/master/WaveTournament
 let socket = new ReconnectingWebSocket("ws://" + location.host + "/ws");
@@ -32,6 +30,13 @@ let currentBestOf;
 let currentStarRed;
 let currentStarBlue;
 
+// Map Details
+let mapModIdentifier = document.getElementById("mapModIdentifier")
+let mapInformationDetails = document.getElementById("mapInformationDetails")
+let mapInformationTitle = document.getElementById("mapInformationTitle")
+let mapInformationDifficultyAndMapper = document.getElementById("mapInformationDifficultyAndMapper")
+let mapInformationDifficulty = document.getElementById("mapInformationDifficulty")
+let mapInformationMapper = document.getElementById("mapInformationMapper")
 // Map Info
 let mapStatsCS = document.getElementById("mapStatsCS");
 let mapStatsAR = document.getElementById("mapStatsAR");
@@ -47,7 +52,7 @@ let isAutoPickedMap = false;
 let isPickedMap = false;
 
 // Score Info
-let currentScoreVisibility = true;
+let currentScoreVisibility;
 let movingScoreBars = document.getElementById("movingScoreBars");
 let movingScoreBarRed = document.getElementById("movingScoreBarRed");
 let movingScoreBarBlue = document.getElementById("movingScoreBarBlue");
@@ -57,8 +62,8 @@ let playScoreBlue = document.getElementById("playScoreBlue");
 let currentScoreRed;
 let currentScoreBlue;
 let animation = {
-    playScoreRed:  new CountUp('playScoreRed', 0, 0, 0, .2, {useEasing: true, useGrouping: true,   separator: ",", decimal: "." }),
-    playScoreBlue:  new CountUp('playScoreBlue', 0, 0, 0, .2, {useEasing: true, useGrouping: true,   separator: " ", decimal: "." }),
+    playScoreRed:  new CountUp('playScoreRed', 0, 0, 0, .2, {useEasing: true, useGrouping: true, separator: ",", decimal: "." }),
+    playScoreBlue:  new CountUp('playScoreBlue', 0, 0, 0, .2, {useEasing: true, useGrouping: true, separator: ",", decimal: "." }),
 }
 
 // Chat
@@ -197,8 +202,22 @@ socket.onmessage = event => {
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Map Info ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     if (currentMapID !== data.menu.bm.id) {
         currentMapID = data.menu.bm.id;
-        mapSetMapper.innerText = data.menu.bm.metadata.mapper;
-
+        // Reset map mod identifier
+        mapModIdentifier.innerText = "NP"
+        mapModIdentifier.style.backgroundColor = "darkgray";
+        mapModIdentifier.style.color = "rgb(70,70,70)";
+        // Map Background
+        mapInformationDetails.style.backgroundImage = `url("https://assets.ppy.sh/beatmaps/${data.menu.bm.set}/covers/cover.jpg")`
+        // Map Title
+        mapInformationTitle.innerText = `${data.menu.bm.metadata.artist.toUpperCase()} - ${data.menu.bm.metadata.title.toUpperCase()}`
+        if (mapInformationTitle.getBoundingClientRect().width > 444) mapInformationTitle.classList.add("mapInformationDetailTextWrap")
+        else mapInformationTitle.classList.remove("mapInformationDetailTextWrap")
+        // Map Difficulty and Mapper
+        mapInformationDifficulty.innerText = `[${data.menu.bm.metadata.difficulty.toUpperCase()}]`
+        mapInformationMapper.innerText = data.menu.bm.metadata.mapper.toUpperCase()
+        if (mapInformationDifficultyAndMapper.getBoundingClientRect().width > 444) mapInformationDifficultyAndMapper.classList.add("mapInformationDetailTextWrap")
+        else mapInformationDifficultyAndMapper.classList.remove("mapInformationDetailTextWrap")
+        
         let getMaps = new Promise((resolve, reject) => {
             let mapsArray = getAllMaps();
             resolve(mapsArray);  
@@ -215,13 +234,13 @@ socket.onmessage = event => {
                         currentMap = mapsArray[i][j];
                         foundMapFromMappool = true;
                             
-                        mapStatsCS.innerText = Math.round((parseFloat(mapsArray[i][j].cs) + Number.EPSILON) * 100) / 100;
-                        mapStatsAR.innerText = Math.round((parseFloat(mapsArray[i][j].ar) + Number.EPSILON) * 100) / 100;
-                        mapStatsOD.innerText = Math.round((parseFloat(mapsArray[i][j].od) + Number.EPSILON) * 100) / 100;
+                        mapStatsCS.innerText = parseFloat(mapsArray[i][j].cs).toFixed(1);
+                        mapStatsAR.innerText = parseFloat(mapsArray[i][j].cs).toFixed(1);
+                        mapStatsOD.innerText = parseFloat(mapsArray[i][j].cs).toFixed(1);
 
-                        mapStatsLen.innerText = `${("0" + Math.floor(parseFloat(mapsArray[i][j].songLength) / 60)).slice(-2)}:${("0" + Math.floor(parseInt(mapsArray[i][j].songLength) % 60)).slice(-2)}`;
+                        mapStatsLen.innerText = `${("0" + Math.floor(parseInt(mapsArray[i][j].songLength) / 60)).slice(-2)}:${("0" + Math.floor(parseInt(mapsArray[i][j].songLength) % 60)).slice(-2)}`;
                         mapStatsBPM.innerText = Math.round((parseFloat(mapsArray[i][j].bpm) + Number.EPSILON) * 100) / 100;
-                        mapStatsSR.innerText = Math.round((parseFloat(mapsArray[i][j].difficultyrating) + Number.EPSILON) * 100) / 100;
+                        mapStatsSR.innerText = parseFloat(mapsArray[i][j].difficultyrating).toFixed(2);
 
                         if (isCurrentlyMappoolPage && !isAutoPickedMap && !isPickedMap) {
                             document.getElementById(currentMap.beatmapID).click();
@@ -234,32 +253,18 @@ socket.onmessage = event => {
             }
 
             if (!foundMapFromMappool) {
-                mapStatsCS.innerText = data.menu.bm.stats.CS;
-                mapStatsAR.innerText = data.menu.bm.stats.AR;
-                mapStatsOD.innerText = data.menu.bm.stats.OD;
-                requestLengthData(currentMapID, getAPIKey());
-                
+                // CS / AR / OD / SR
+                mapStatsCS.innerText = data.menu.bm.stats.CS.toFixed(1);
+                mapStatsAR.innerText = data.menu.bm.stats.AR.toFixed(1);
+                mapStatsOD.innerText = data.menu.bm.stats.OD.toFixed(1);
+                mapStatsSR.innerText = data.menu.bm.stats.SR.toFixed(2); 
+                // BPM
                 if (data.menu.bm.stats.BPM.max - data.menu.bm.stats.BPM.min > 0) { 
                     mapStatsBPM.innerText = `${data.menu.bm.stats.BPM.min} - ${data.menu.bm.stats.BPM.max }`; 
                 }   else { mapStatsBPM.innerText = data.menu.bm.stats.BPM.min; }
-
-                mapStatsSR.innerText = data.menu.bm.stats.SR; 
-            }
-
-            function requestLengthData(beatmapID, apiKey) {
-                let request = new XMLHttpRequest();
-                request.open(
-                    "GET",
-                    `https://osu.ppy.sh/api/get_beatmaps?k=${apiKey}&b=${beatmapID}`,
-                    true
-                );
-                request.onload = function() {
-                    let mapData = JSON.parse(this.response);
-                    if (request.status >= 200 && request.status < 400) {
-                        mapData.forEach(map => { mapStatsLen.innerText = `${("0" + Math.floor(map.total_length / 60)).slice(-2)}:${("0" + Math.floor(map.total_length % 60)).slice(-2)}`; })
-                    }
-                }
-                request.send();
+                // LEN
+                let currentLengthSeconds = Math.round(data.menu.bm.time.full / 1000)
+                mapStatsLen.innerText = `${("0" + Math.floor(parseInt(currentLengthSeconds) / 60)).slice(-2)}:${("0" + Math.floor(parseInt(currentLengthSeconds) % 60)).slice(-2)}`;
             }
         })
     }
@@ -294,20 +299,26 @@ socket.onmessage = event => {
         animation.playScoreBlue.update(currentScoreBlue);
 
         if (currentScoreRed > currentScoreBlue) {
-            playScoreRed.style.fontSize = "45px";
+            playScoreRed.style.fontSize = "42px";
             playScoreBlue.style.fontSize = "30px";
-            movingScoreBarRed.style.width = ((currentScoreRed - currentScoreBlue) / 300000 * 960) + "px";
+            playScoreRed.style.fontFamily = "FuturistBold"
+            playScoreBlue.style.fontFamily = "Futurist"
+            movingScoreBarRed.style.width = ((currentScoreRed - currentScoreBlue) / 900000 * 960) + "px";
             movingScoreBarBlue.style.width = 0;
         } else if (currentScoreRed == currentScoreBlue) {
             playScoreRed.style.fontSize = "35px";
             playScoreBlue.style.fontSize = "35px";
+            playScoreRed.style.fontFamily = "Futurist"
+            playScoreBlue.style.fontFamily = "Futurist"
             movingScoreBarRed.style.width = 0
             movingScoreBarBlue.style.width = 0;
         } else {
             playScoreRed.style.fontSize = "35px";
-            playScoreBlue.style.fontSize = "45px";
+            playScoreBlue.style.fontSize = "42px";
+            playScoreRed.style.fontFamily = "Futurist"
+            playScoreBlue.style.fontFamily = "FuturistBold"
             movingScoreBarRed.style.width = 0;
-            movingScoreBarBlue.style.width = ((currentScoreBlue - currentScoreRed) / 300000 * 960) + "px";
+            movingScoreBarBlue.style.width = ((currentScoreBlue - currentScoreRed) / 900000 * 960) + "px";
         }
     }
 

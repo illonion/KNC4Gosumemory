@@ -132,7 +132,7 @@
 #mapStatsLen,
 #mapStatsBPM,
 #mapStatsSR {
-    color: var(--blue);
+    color: white;
     font-size: 28px;
 }
 .mapStatsLine { 
@@ -172,32 +172,28 @@
 #playScores {
     position:absolute;
 	width:1920px;
-    top: 945px;
+    top: 923px;
     height:12px;
     transition: 0.5s ease-in-out;
 }
 .playScore {
 	position: absolute;
-    font-family: FuturistBold;
+    font-family: Futurist;
     transition: ease-in-out 500ms;
     font-size: 35px;
+    color: white;
 }
-#playScoreRed {
-	right: 970px;	
-	color: var(--red);
-}
-#playScoreBlue {
-	left: 970px;	
-	color: var(--blue);
-}
+#playScoreRed { right: 965px; }
+#playScoreBlue { left: 965px; }
 
 /* Chat */
 #chatDisplay {
     position: absolute;
     bottom: 0; right: 0;
-    width: 590px; height: 150px;
+    width: 590px; height: 174px;
     background-color: rgba(0,0,0,0.5);
-    font-family: "QTV-B", Helvetica, sans-serif;
+    font-family: "FuturistBold"; font-size: 18px;
+    letter-spacing: 0.5px;
     overflow-x: hidden; overflow-y: scroll;
 	padding: 5px 12px;
     transition: ease-in-out 500ms;
@@ -227,7 +223,7 @@
 	overflow: hidden;
 }
 /* Colours Taken From https://github.com/VictimCrasher/static/tree/master/WaveTournament */
-.unknown { color: yellow; }
+.unknown { color: #66ff94; }
 .bot { color: #FF66AA; }
 .left { color: var(--red); }
 .right { color: var(--blue); }
