@@ -120,21 +120,17 @@
 #mapStatsLen,
 #mapStatsBPM,
 #mapStatsSR {
-    color: rgb(232,107,88);
+    color: var(--blue);
+    font-size: 28px;
 }
-.mapStatsLine { color: white; }
-#mapStatsCSAROD {
-    position: absolute;
-    bottom: 38px; left: 465px;
+.mapStatsLine { 
+    color: white; 
+    position: absolute; left: 641px;
     font-size: 20px;
     width: max-content;
 }
-#mapStatsLenBPMSR {
-    position: absolute;
-    bottom: 15px; left: 465px;
-    width: max-content;
-    font-size: 20px;
-}
+#mapStatsCSAROD { bottom: 19px; }
+#mapStatsLenBPMSR { bottom: 52px;  }
 
 /* Score Bar Section - Moving Score Bars*/
 #movingScoreBars {
