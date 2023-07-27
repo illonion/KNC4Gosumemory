@@ -6,6 +6,10 @@
     font-family: "FredokaO";
     src: url("../fonts/FredokaOne-Regular.ttf");
 }
+@font-face {
+    font-family: "FuturistBold";
+    src: url("../fonts/futrstb.ttf");
+}
 
 .templateContentPosition {
     margin-top: 10px;
