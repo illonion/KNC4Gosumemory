@@ -1,8 +1,8 @@
 /* Base CSS */
 
 :root {
-	--blue: rgb(103,196,255); /* Right */
-	--red: rgb(232,107,88); /* Left */
+	--blue: #88d1fb; /* Right */
+	--red: #ffa6ca; /* Left */
 
     --greenScreen: #04F404;
 }
@@ -140,7 +140,7 @@
 #movingScoreBars {
 	position:absolute;
 	width:1920px;
-    top: 920px;
+    top: 895px;
     height:20px;
     transition: 0.5s ease-in-out;
 }
