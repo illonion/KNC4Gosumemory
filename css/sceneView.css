@@ -65,54 +65,16 @@
 /* Map Information */
 #mapInformation {
     position: absolute; bottom: 0;
-    width: 450px; height: 86px;
+    width: 615px; height: 95px;
     background-color: white;
     background-size: 100%;
     transition: 500ms ease-in-out;
     font-family: FuturistBold;
 }
 #mapInformationLayer {
+    position: absolute; top: 0; left: 0;
     width: inherit; height: inherit;
     background-color: rgba(0,0,0,0.5);
-}
-#mapPick {
-    position: absolute;
-    top: -33px;
-    color: white;
-    font-size: 24px;
-    left: 15px;
-}
-#mapNameWrapper {
-    display: inline-block;
-    position:absolute;
-    bottom: 15px; left: 15px;
-	margin:auto;
-    white-space: nowrap;
-    overflow: hidden;
-    width:420px; height:32px;
-}
-#mapName {
-    color: white;
-    font-size: 30px;
-    position:relative;
-    display:inline-block;
-	width:max-content;
-}
-.mapNameWrap {
-    transform: translate(420px);
-    animation: displaySlide 12s linear infinite;
-}
-@keyframes displaySlide {
-    0% {transform: translate(0px);}
-    11% {transform: translate(0px);}
-    80% { transform: translate(calc(-100% + 420px)); }
-    100% { transform: translate(calc(-100% + 420px)); }
-}
-#mapSet {
-    font-size: 24px;
-    color: white;
-    position: absolute;
-    bottom: 47px; left: 15px;
 }
 #mapStatsCS,
 #mapStatsAR,

@@ -33,10 +33,6 @@ let currentStarRed;
 let currentStarBlue;
 
 // Map Info
-let mapInformation = document.getElementById("mapInformation");
-let mapName = document.getElementById("mapName");
-let mapSetMapper = document.getElementById("mapSetMapper");
-
 let mapStatsCS = document.getElementById("mapStatsCS");
 let mapStatsAR = document.getElementById("mapStatsAR");
 let mapStatsOD = document.getElementById("mapStatsOD");
@@ -92,7 +88,6 @@ let bluePick = document.getElementById("bluePick");
 let removeSelection = document.getElementById("removeSelection");
 let protectCount = 0;
 
-let mapPicker = document.getElementById("mapPicker");
 let mapStatsIndiv = document.getElementsByClassName("mapStatsIndiv");
 
 // Map Display
@@ -202,10 +197,6 @@ socket.onmessage = event => {
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Map Info ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     if (currentMapID !== data.menu.bm.id) {
         currentMapID = data.menu.bm.id;
-        mapInformation.style.backgroundImage = `url("https://assets.ppy.sh/beatmaps/${data.menu.bm.set}/covers/cover.jpg")`;
-        mapName.innerText = `${data.menu.bm.metadata.artist} - ${data.menu.bm.metadata.title} [${data.menu.bm.metadata.difficulty}]`
-        if (mapName.getBoundingClientRect().width > 430) mapName.classList.add("mapNameWrap")
-        else mapName.classList.remove("mapNameWrap")
         mapSetMapper.innerText = data.menu.bm.metadata.mapper;
 
         let getMaps = new Promise((resolve, reject) => {
@@ -404,16 +395,12 @@ function mapClickEvent() {
     else if (blueProtect.selected) { this.appendChild(mapText); mapText.style.backgroundColor = "rgba(0,0,0,0)"; this.style.outline = `4px dashed ${rightColour}`; }
     else if (redPick.selected) { 
         mapText.innerText = `Picked by ${currentTeamRedName}`;
-        mapPicker.style.color = leftColour;
-        mapPicker.innerText = currentTeamRedName;
         for (var i = 0; i < mapStatsIndiv.length; i++) { mapStatsIndiv[i].style.color = leftColour; }
         isPickedMap = true;
         this.appendChild(mapText);
     }
     else if (bluePick.selected) { 
         mapText.innerText = `Picked by ${currentTeamBlueName}`; 
-        mapPicker.style.color = rightColour;
-        mapPicker.innerText = currentTeamBlueName;
         for (var i = 0; i < mapStatsIndiv.length; i++) mapStatsIndiv[i].style.color = rightColour
         isPickedMap = true;
         this.appendChild(mapText);
