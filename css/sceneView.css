@@ -66,16 +66,22 @@
 #mapInformation {
     position: absolute; bottom: 0;
     width: 615px; height: 95px;
-    background-color: white;
-    background-size: 100%;
     transition: 500ms ease-in-out;
     font-family: FuturistBold;
 }
-#mapInformationLayer {
+/* Map Mod Identifier (NM1, HD2, etc.)*/
+#mapModIdentifier {
+    width: 123px; height: inherit;
+    text-align: center;
+    line-height: 95px;
+    font-size: 36px;
+    background-color: gray;
+}
+/* #mapInformationLayer {
     position: absolute; top: 0; left: 0;
     width: inherit; height: inherit;
     background-color: rgba(0,0,0,0.5);
-}
+} */
 #mapStatsCS,
 #mapStatsAR,
 #mapStatsOD,
