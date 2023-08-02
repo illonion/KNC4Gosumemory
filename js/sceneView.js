@@ -68,6 +68,7 @@ let animation = {
 
 // Chat
 let chatDisplay = document.getElementById("chatDisplay");
+let danceShake = document.getElementById("danceShake")
 let chatLen = 0;
 let chatColour;
 
@@ -275,6 +276,7 @@ socket.onmessage = event => {
         if (currentScoreVisibility) {
             chatDisplay.style.bottom = "-80px";
             chatDisplay.style.opacity = 0;
+            danceShake.style.right = "40px"
             if (ipcState != 4) {
                 movingScoreBars.style.opacity = 1;
                 playScores.style.opacity = 1;
@@ -285,6 +287,7 @@ socket.onmessage = event => {
         } else {
             chatDisplay.style.bottom = 0;
             chatDisplay.style.opacity = 1;
+            danceShake.style.right = "630px"
             movingScoreBars.style.opacity = 0;
             playScores.style.opacity = 0;
         }
@@ -299,24 +302,57 @@ socket.onmessage = event => {
         animation.playScoreBlue.update(currentScoreBlue);
 
         if (currentScoreRed > currentScoreBlue) {
-            playScoreRed.style.fontSize = "42px";
-            playScoreBlue.style.fontSize = "30px";
+            // Fonts
+            playScoreRed.style.fontSize = "40px"
             playScoreRed.style.fontFamily = "FuturistBold"
+            playScoreBlue.style.fontSize = "28px"
             playScoreBlue.style.fontFamily = "Futurist"
+
+            // Colours
+            playScoreRed.style.color = "var(--red)"
+            playScoreBlue.style.color = "white"
+
+            // Line Heights
+            playScoreRed.style.lineHeight = "43px"
+            playScoreBlue.style.lineHeight = "none"
+
+            // Moving Score Bars
             movingScoreBarRed.style.width = ((currentScoreRed - currentScoreBlue) / 900000 * 960) + "px";
             movingScoreBarBlue.style.width = 0;
         } else if (currentScoreRed == currentScoreBlue) {
-            playScoreRed.style.fontSize = "35px";
-            playScoreBlue.style.fontSize = "35px";
+            // Fonts
+            playScoreRed.style.fontSize = "28px"
             playScoreRed.style.fontFamily = "Futurist"
+            playScoreBlue.style.fontSize = "28px"
             playScoreBlue.style.fontFamily = "Futurist"
+
+            // Colours
+            playScoreRed.style.color = "white"
+            playScoreBlue.style.color = "white"
+
+            // Line Heights
+            playScoreRed.style.lineHeight = "none"
+            playScoreBlue.style.lineHeight = "none"
+
+            // Moving Score Bars
             movingScoreBarRed.style.width = 0
             movingScoreBarBlue.style.width = 0;
         } else {
-            playScoreRed.style.fontSize = "35px";
-            playScoreBlue.style.fontSize = "42px";
+            // Fonts
+            playScoreRed.style.fontSize = "28px"
             playScoreRed.style.fontFamily = "Futurist"
+            playScoreBlue.style.fontSize = "40px"
             playScoreBlue.style.fontFamily = "FuturistBold"
+
+            // Colours
+            playScoreRed.style.color = "white"
+            playScoreBlue.style.color = "var(--blue)"
+
+            // Line Heights
+            playScoreRed.style.lineHeight = "none"
+            playScoreBlue.style.lineHeight = "43px"
+            
+            // Moving Score Bars
             movingScoreBarRed.style.width = 0;
             movingScoreBarBlue.style.width = ((currentScoreBlue - currentScoreRed) / 900000 * 960) + "px";
         }

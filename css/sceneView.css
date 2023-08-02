@@ -6,11 +6,11 @@
 
     --greenScreen: #04F404;
 
-    --mapInformationWidth: 615px;
-    --mapModIdentifierWidth: 123px;
-    --mapInformationDetailsWidth: calc(var(--mapInformationWidth) - var(--mapModIdentifierWidth));
-    --mapInformationDetailsTextLeft: 24px;
-    --mapInformationDetailWrapperWidth: calc(var(--mapInformationDetailsWidth) - var(--mapInformationDetailsTextLeft) * 2);
+    --mapInformationWidth: 1119px;
+    --mapModIdentifierWidth: 126px;
+    --mapInformationDetailsWidth: calc(508px);
+    --mapInformationDetailsTextLeft: 43px;
+    --mapInformationDetailWrapperWidth: calc(var(--mapInformationDetailsWidth) - var(--mapInformationDetailsTextLeft) * 2 + 19px);
 }
 #bgAni {
     width: 1920px; height: 1080px;
@@ -71,22 +71,38 @@
 /* Map Information */
 #mapInformation {
     position: absolute; bottom: 0;
-    width: var(--mapInformationWidth); height: 95px;
+    width: var(--mapInformationWidth); height: 89px;
     transition: 500ms ease-in-out;
     font-family: FuturistBold;
+    overflow: hidden;
+    background-image: linear-gradient(to bottom right, rgba(0,0,0,0), #88d1fb05, gray);
+    border-style: solid;
+    border-width: 3px 3px 3px 0px;
+    border-color: white;
 }
 /* Map Mod Identifier (NM1, HD2, etc.)*/
 #mapModIdentifier {
+    position: absolute;
     width: var(--mapModIdentifierWidth); height: inherit;
     text-align: center;
-    line-height: 95px;
+    line-height: 89px;
     font-size: 36px;
-    background-color: gray;
+    background-color: darkgray;
+    border-radius: 0 45px 45px 0;
+    z-index: 2;
+}
+#mapModIdentifierCircle {
+    position: absolute; top: -16px; left: 3px;
+    width: 124px; height: 124px;
+    z-index: 1;
+    border-radius: 50%;
+    background-color: darkgray;
 }
 /* Map Information Details */
 #mapInformationDetails {
-    position: absolute; left: var(--mapModIdentifierWidth); top: 0;
+    position: absolute; left: calc(var(--mapModIdentifierWidth) - 19px); top: 0;
     width: var(--mapInformationDetailsWidth); height: inherit;
+    z-index: 0;
 }
 #mapInformationDetailsLayer {
     position: absolute; top: 0; left: 0;
@@ -141,14 +157,37 @@
     font-size: 20px;
     width: max-content;
 }
-#mapStatsCSAROD { bottom: 19px; }
-#mapStatsLenBPMSR { bottom: 52px;  }
+#mapStatsCSAROD { bottom: 13px; }
+#mapStatsLenBPMSR { bottom: 46px;  }
+/* Map Information CSS Circles */
+#mapInformationCircles {
+    position: absolute;
+    left: 1119px;
+    bottom: 0;
+}
+.mapInformationBlankCircle {
+    position: absolute; right: -3px;
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    border-width: 3px;
+    border-style: solid;
+    border-color: white transparent transparent transparent;
+    background-color: rgb(12,12,12);
+}
+#mapInformationBlankCircle1 { 
+    right: -3.3px; bottom: 57px;
+    transform: translate(50%, -50%) rotate(-135deg);
+}
+#mapInformationBlankCircle2 { 
+    bottom: 0; 
+    transform: translate(50%, 50%) rotate(-45deg); 
+}
 
 /* Score Bar Section - Moving Score Bars*/
 #movingScoreBars {
 	position:absolute;
 	width:1920px;
-    top: 895px;
+    top: 900px;
     height:20px;
     transition: 0.5s ease-in-out;
 }
@@ -172,7 +211,7 @@
 #playScores {
     position:absolute;
 	width:1920px;
-    top: 923px;
+    top: 930px;
     height:12px;
     transition: 0.5s ease-in-out;
 }
@@ -180,11 +219,17 @@
 	position: absolute;
     font-family: Futurist;
     transition: ease-in-out 500ms;
-    font-size: 35px;
+    font-size: 28px;
     color: white;
 }
 #playScoreRed { right: 965px; }
 #playScoreBlue { left: 965px; }
+
+/* Dance shake */
+#danceShake {
+    position: absolute; bottom: 20px; right: 40px;
+    transition: ease-in-out 500ms;
+}
 
 /* Chat */
 #chatDisplay {
