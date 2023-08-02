@@ -31,7 +31,9 @@ let currentStarRed;
 let currentStarBlue;
 
 // Map Details
+let mapInformation = document.getElementById("mapInformation")
 let mapModIdentifier = document.getElementById("mapModIdentifier")
+let mapModIdentifierCircle = document.getElementById("mapModIdentifierCircle")
 let mapInformationDetails = document.getElementById("mapInformationDetails")
 let mapInformationTitle = document.getElementById("mapInformationTitle")
 let mapInformationDifficultyAndMapper = document.getElementById("mapInformationDifficultyAndMapper")
@@ -45,6 +47,10 @@ let mapStatsLen = document.getElementById("mapStatsLen");
 let mapStatsBPM = document.getElementById("mapStatsBPM");
 let mapStatsSR = document.getElementById("mapStatsSR");
 let currentMapID;
+
+// Circles
+let mapInformationBlankCircle1 = document.getElementById("mapInformationBlankCircle1")
+let mapInformationBlankCircle2 = document.getElementById("mapInformationBlankCircle2")
 
 // Map Selection
 let isCurrentlyMappoolPage = false;
@@ -205,8 +211,6 @@ socket.onmessage = event => {
         currentMapID = data.menu.bm.id;
         // Reset map mod identifier
         mapModIdentifier.innerText = "NP"
-        mapModIdentifier.style.backgroundColor = "darkgray";
-        mapModIdentifier.style.color = "rgb(70,70,70)";
         // Map Background
         mapInformationDetails.style.backgroundImage = `url("https://assets.ppy.sh/beatmaps/${data.menu.bm.set}/covers/cover.jpg")`
         // Map Title
@@ -234,14 +238,15 @@ socket.onmessage = event => {
                         // Map Stats
                         currentMap = mapsArray[i][j];
                         foundMapFromMappool = true;
+                        mapModIdentifier.innerText = `${currentMap.mod.toUpperCase()}${currentMap.order}`
                             
-                        mapStatsCS.innerText = parseFloat(mapsArray[i][j].cs).toFixed(1);
-                        mapStatsAR.innerText = parseFloat(mapsArray[i][j].cs).toFixed(1);
-                        mapStatsOD.innerText = parseFloat(mapsArray[i][j].cs).toFixed(1);
+                        mapStatsCS.innerText = parseFloat(currentMap.cs).toFixed(1);
+                        mapStatsAR.innerText = parseFloat(currentMap.ar).toFixed(1);
+                        mapStatsOD.innerText = parseFloat(currentMap.od).toFixed(1);
 
-                        mapStatsLen.innerText = `${("0" + Math.floor(parseInt(mapsArray[i][j].songLength) / 60)).slice(-2)}:${("0" + Math.floor(parseInt(mapsArray[i][j].songLength) % 60)).slice(-2)}`;
-                        mapStatsBPM.innerText = Math.round((parseFloat(mapsArray[i][j].bpm) + Number.EPSILON) * 100) / 100;
-                        mapStatsSR.innerText = parseFloat(mapsArray[i][j].difficultyrating).toFixed(2);
+                        mapStatsLen.innerText = `${("0" + Math.floor(parseInt(currentMap.songLength) / 60)).slice(-2)}:${("0" + Math.floor(parseInt(currentMap.songLength) % 60)).slice(-2)}`;
+                        mapStatsBPM.innerText = Math.round((parseFloat(currentMap.bpm) + Number.EPSILON) * 100) / 100;
+                        mapStatsSR.innerText = parseFloat(currentMap.difficultyrating).toFixed(2);
 
                         if (isCurrentlyMappoolPage && !isAutoPickedMap && !isPickedMap) {
                             document.getElementById(currentMap.beatmapID).click();
@@ -441,92 +446,32 @@ function mapClickEvent() {
     else if (redProtect.selected) { this.appendChild(mapText); mapText.style.backgroundColor = "rgba(0,0,0,0)"; this.style.outline = `4px dashed ${leftColour}`; }
     else if (blueProtect.selected) { this.appendChild(mapText); mapText.style.backgroundColor = "rgba(0,0,0,0)"; this.style.outline = `4px dashed ${rightColour}`; }
     else if (redPick.selected) { 
+        mapInformationBlankCircle1.style.borderColor = "var(--red) rgba(12,12,12) rgba(12,12,12) rgba(12,12,12)"
+        mapInformationBlankCircle2.style.borderColor = "var(--red) rgba(12,12,12) rgba(12,12,12) rgba(12,12,12)"
+        mapInformation.style.borderColor = "var(--red)"
+        mapInformation.style.backgroundImage = "linear-gradient(to bottom right, rgba(0,0,0,0), #ffa6ca05, #ffa6ca80)"
+        mapModIdentifier.style.backgroundColor = "var(--red)"
+        mapModIdentifier.style.color = "#da427e"
+        mapModIdentifierCircle.style.backgroundColor = "var(--red)"
+        
         mapText.innerText = `Picked by ${currentTeamRedName}`;
         for (var i = 0; i < mapStatsIndiv.length; i++) { mapStatsIndiv[i].style.color = leftColour; }
         isPickedMap = true;
         this.appendChild(mapText);
     }
     else if (bluePick.selected) { 
+        mapInformationBlankCircle1.style.borderColor = "var(--blue) rgba(12,12,12) rgba(12,12,12) rgba(12,12,12)"
+        mapInformationBlankCircle2.style.borderColor = "var(--blue) rgba(12,12,12) rgba(12,12,12) rgba(12,12,12)"
+        mapInformation.style.borderColor = "var(--blue)"
+        mapInformation.style.backgroundImage = "linear-gradient(to bottom right, rgba(0,0,0,0), #88d1fb05, #88d1fb80)"
+        mapModIdentifier.style.backgroundColor = "var(--blue)"
+        mapModIdentifier.style.color = "#378bbc"
+        mapModIdentifierCircle.style.backgroundColor = "var(--blue)"
+
         mapText.innerText = `Picked by ${currentTeamBlueName}`; 
         for (var i = 0; i < mapStatsIndiv.length; i++) mapStatsIndiv[i].style.color = rightColour
         isPickedMap = true;
         this.appendChild(mapText);
-    }
-
-
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Map Display ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    if (mapDisplayMapContainer.classList.contains("mapDisplayMapContainerPulseRed")) { mapDisplayMapContainer.classList.remove("mapDisplayMapContainerPulseRed"); }
-    if (mapDisplayMapContainer.classList.contains("mapDisplayMapContainerPulseBlue")) { mapDisplayMapContainer.classList.remove("mapDisplayMapContainerPulseBlue"); }
-
-    if (!removeSelection.selected) {
-        let getMaps = new Promise((resolve, reject) => {
-            let mapsArray = getAllMaps();
-            resolve(mapsArray);  
-        })
-        getMaps.then((mapsArray) => {
-            for (var i = 0; i < mapsArray.length; i++) {
-                for (var j = 0; j < mapsArray[i].length; j++) {
-                    if (mapsArray[i][j].beatmapID == this.id) {
-                        foundMapFromMappool = true;
-                        // Displaying Map Display Yext
-                        let mapChooserTeamText = "";
-                        if (redBan.selected || blueBan.selected) mapChooserTeamText = "Banned By "
-                        else if (redPick.selected || bluePick.selected) mapChooserTeamText = "Picked By "
-                        else if (redProtect.selected || blueProtect.selected) mapChooserTeamText = "Protected By "
-    
-                        if (redBan.selected || redPick.selected || redProtect.selected) {
-                            mapDisplayMapContainer.classList.add("mapDisplayMapContainerPulseRed");
-                            mapDisplayMapContainer.style.borderColor = leftColour;
-                            mapText.style.color = leftColour;
-                            mapChooserTeamText += currentTeamRedName;
-                            mapChooserTeam.style.color = leftColour;
-                            if (blueProtect.selected) mapDisplayMapContainer.style.borderStyle = "dashed"
-                            else mapDisplayMapContainer.style.borderStyle = "solid"
-                        } else if (blueBan.selected || bluePick.selected || blueProtect.selected) {
-                            mapDisplayMapContainer.classList.add("mapDisplayMapContainerPulseBlue"); 
-                            mapDisplayMapContainer.style.borderColor = rightColour;
-                            mapText.style.color = rightColour;
-                            mapChooserTeamText += currentTeamBlueName;
-                            mapChooserTeam.style.color = rightColour;
-                            if (blueProtect.selected) mapDisplayMapContainer.style.borderStyle = "dashed"
-                            else mapDisplayMapContainer.style.borderStyle = "solid"
-                        }
-                        mapChooserTeam.innerText = mapChooserTeamText;
-    
-                        // Map Display Container
-                        mapDisplayMapImage.style.backgroundImage = `url("${mapsArray[i][j].imgURL}")`;
-                        mapDisplayMapTitle.innerText = `${mapsArray[i][j].artist} - ${mapsArray[i][j].songName}`;
-                        mapDisplayMapDifficultyName.innerText = mapsArray[i][j].difficultyname;
-                        mapDisplayMapMapperName.innerText = mapsArray[i][j].mapper;
-    
-                        mapDisplayMapMod.setAttribute("src",`mods/${mapsArray[i][j].mod}.png`);
-                        mapDisplayMapOn();
-                        setTimeout(() => {
-                            mapDisplay.style.opacity = "0";
-                            setTimeout(() => mapDisplay.style.display = "none" , 500)
-                            if (redPick.selected || bluePick.selected)toSpectatorView()
-                        }, 5000);
-
-                        if (mapDisplayMapTitle.getBoundingClientRect().width >= 1000) mapDisplayMapTitle.classList.add("mapDisplayMapTitleWrap");
-                        else mapDisplayMapTitle.classList.remove("mapDisplayMapTitleWrap");
-                        if (mapDisplayMapDifficultyName.getBoundingClientRect().width >= 340) mapDisplayMapDifficultyName.classList.add("mapDisplayMapDifficultyWrap");
-                        else mapDisplayMapDifficultyName.classList.remove("mapDisplayMapDifficultyWrap");
-                        if (mapDisplayMapMapperName.getBoundingClientRect().width >= 340) mapDisplayMapMapperName.classList.add("mapDisplayMapMapperWrap")
-                        else mapDisplayMapMapperName.classList.remove("mapDisplayMapMapperWrap")
-                    
-                        if (redBan.selected) blueBan.selected = true
-                        else if (blueBan.selected) redBan.selected = true
-                        else if (redPick.selected) bluePick.selected = true
-                        else if (bluePick.selected) redPick.selected = true
-
-                        if (redProtect.selected && protectCount >= 2) { blueBan.selected = true;}
-                        else if (redProtect.selected) { blueProtect.selected = true; }
-                        else if (blueProtect.selected && protectCount >= 2) { redBan.selected = true; }
-                        else if (blueProtect.selected) { redProtect.selected = true; }
-                    }
-                }
-            }
-        })
     }
 }
 
