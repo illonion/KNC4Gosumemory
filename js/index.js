@@ -1,7 +1,3 @@
-function getAPIKey() {
-    return "0501452af051a7c75928ab9775d5381bd4745a08";
-}
-
 function createNewMappool() {
     document.getElementById("mappoolTemplateGeneratorPage").style.display = "block";
     document.getElementById("bgAni").style.display = "none";

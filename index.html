@@ -57,9 +57,7 @@
             <button class="templateContentPosition templateGeneratorButtons nextPageButton" onclick="validateMappolModGenerator()">Next Page</button>
         </div>
 
-
         <div id="mappoolGeneratorPage"></div>
-
 
         <div id="mappoolDownloadPage">
             <p id="mappoolDownloadPageParagraph">Hello! The generation for the mappool is successful. The download should happen automatically. If not, click the download links below.<br><BR>
@@ -68,10 +66,6 @@
                 Please place both files into that folder. After you have imported into the files, click on the button below to load the file!<br><br>
             </p>
         </div>
-
-        <video id="bgAni" autoplay loop muted>
-            <source src="static/background.mp4" type="video/mp4">
-        </video>
         <div id="sceneViewPage">
             <section id="top">
                 <div id="teamRed">
@@ -87,26 +81,27 @@
             </section>
             <div id="mappoolViewPage"></div>    
             <div id="spectatorViewPage"></div>
-            <div id="mapDisplay">
-                <div id="mapChooserTeam"></div>
-                <div id="mapDisplayMapContainer">
-                    <div id="mapDisplayMapImage"><div id="mapDisplayMapImageLayer"></div></div>
-                    <div id="mapDisplayMapTitleWrapper"><div id="mapDisplayMapTitle"></div></div>
-                    <div id="mapDisplayMapDifficulty">difficulty: <span id="mapDisplayMapDifficultyWrapper"><span id="mapDisplayMapDifficultyName"></span></span></div>
-                    <div id="mapDisplayMapMapper">set by: <span id="mapDisplayMapMapperWrapper"><span id="mapDisplayMapMapperName"></span></span></div>
-                    <img id="mapDisplayMapMod">
-                </div>
-            </div>
             <section id="bottom">
                 <div id="mapInformation">
-                    <div id="mapPick">Picked By: <span id="mapPicker"></span></div>
-                    <div id="mapInformationLayer"></div>
-                    <div id="mapNameWrapper">
-                        <div id="mapName"></div>
+                    <div id="mapModIdentifier"></div>
+                    <div id="mapModIdentifierCircle"></div>
+                    <div id="mapInformationDetails">
+                        <div id="mapInformationDetailsLayer"></div>
+                        <div class="mapInformationDetailWrapper" id="mapInformationTitleWrapper"><span class="mapInformationDetailText" id="mapInformationTitle"></span></div>
+                        <div class="mapInformationDetailWrapper" id="mapInformationDifficultyAndMapperWrapper">
+                            <span class="mapInformationDetailText" id="mapInformationDifficultyAndMapper">
+                                <span id="mapInformationDifficulty"></span>
+                                mapped by 
+                                <span id="mapInformationMapper"></span>
+                            </span>
+                        </div>
                     </div>
-                    <div id="mapSet">set by <span id="mapSetMapper"></span></div>
-                    <div class="mapStatsLine" id="mapStatsCSAROD">CS: <span class="mapStatsIndiv" id="mapStatsCS"></span> / AR: <span class="mapStatsIndiv" id="mapStatsAR"></span> / OD: <span class="mapStatsIndiv" id="mapStatsOD"></span></div>
-                    <div class="mapStatsLine" id="mapStatsLenBPMSR">Length: <span class="mapStatsIndiv" id="mapStatsLen"></span> / BPM: <span class="mapStatsIndiv" id="mapStatsBPM"></span> / Star: <span class="mapStatsIndiv" id="mapStatsSR"></span></div>
+                    <div class="mapStatsLine" id="mapStatsLenBPMSR">LENGTH <span class="mapStatsIndiv" id="mapStatsLen"></span>&emsp;BPM <span class="mapStatsIndiv" id="mapStatsBPM"></span>&emsp;SR <span class="mapStatsIndiv" id="mapStatsSR"></span></div>
+                    <div class="mapStatsLine" id="mapStatsCSAROD">CS <span class="mapStatsIndiv" id="mapStatsCS"></span>&emsp;AR <span class="mapStatsIndiv" id="mapStatsAR"></span>&emsp;OD <span class="mapStatsIndiv" id="mapStatsOD"></span></div>
+                </div>
+                <div id="mapInformationCircles">
+                    <div class="mapInformationBlankCircle" id="mapInformationBlankCircle1"></div>
+                    <div class="mapInformationBlankCircle" id="mapInformationBlankCircle2"></div>
                 </div>
                 <div id="movingScoreBars">
                     <div class="movingScoreBar" id="movingScoreBarRed"></div>
@@ -116,6 +111,7 @@
                     <div class="playScore" id="playScoreRed"></div>
                     <div class="playScore" id="playScoreBlue"></div>
                 </div>
+                <img id="danceShake" src="static/DANCESHAKE.gif">
                 <div id="chatDisplay"></div>
             </section>
         </div>

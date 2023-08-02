@@ -1,8 +1,16 @@
 /* Base CSS */
 
 :root {
-	--blue: rgb(103,196,255); /* Right */
-	--red: rgb(232,107,88); /* Left */
+	--blue: #88d1fb; /* Right */
+	--red: #ffa6ca; /* Left */
+
+    --greenScreen: #04F404;
+
+    --mapInformationWidth: 1119px;
+    --mapModIdentifierWidth: 126px;
+    --mapInformationDetailsWidth: calc(508px);
+    --mapInformationDetailsTextLeft: 43px;
+    --mapInformationDetailWrapperWidth: calc(var(--mapInformationDetailsWidth) - var(--mapInformationDetailsTextLeft) * 2 + 19px);
 }
 #bgAni {
     width: 1920px; height: 1080px;
@@ -12,16 +20,16 @@
     z-index: -1;
 }
 #sceneViewPage {
-    position: absolute;
-    top: 0; left: 0;
+    position: absolute; top: 0; left: 0;
     width: 1920px; height: 1080px;
+    background-image: url("../static/gameplay.png")
 }
 #spectatorViewPage {
     position: absolute;
     width:1920px; height:720px;
     position:absolute;
-    top:200px; left: 0;
-    background-color:rgb(0,177,64);
+    top:174px; left: 0;
+    background-color: var(--greenScreen);
     transition: 500ms ease-in-out;
     z-index: 2;
 }
@@ -63,82 +71,123 @@
 /* Map Information */
 #mapInformation {
     position: absolute; bottom: 0;
-    width: 450px; height: 86px;
-    background-color: white;
-    background-size: 100%;
+    width: var(--mapInformationWidth); height: 89px;
     transition: 500ms ease-in-out;
-    font-family: "QTV-B", Helvetica, sans-serif;
+    font-family: FuturistBold;
+    overflow: hidden;
+    background-image: linear-gradient(to bottom right, rgba(0,0,0,0), #88d1fb05, gray);
+    border-style: solid;
+    border-width: 3px 3px 3px 0px;
+    border-color: white;
 }
-#mapInformationLayer {
+/* Map Mod Identifier (NM1, HD2, etc.)*/
+#mapModIdentifier {
+    position: absolute;
+    width: var(--mapModIdentifierWidth); height: inherit;
+    text-align: center;
+    line-height: 89px;
+    font-size: 36px;
+    background-color: darkgray;
+    border-radius: 0 45px 45px 0;
+    z-index: 2;
+}
+#mapModIdentifierCircle {
+    position: absolute; top: -16px; left: 3px;
+    width: 124px; height: 124px;
+    z-index: 1;
+    border-radius: 50%;
+    background-color: darkgray;
+}
+/* Map Information Details */
+#mapInformationDetails {
+    position: absolute; left: calc(var(--mapModIdentifierWidth) - 19px); top: 0;
+    width: var(--mapInformationDetailsWidth); height: inherit;
+    z-index: 0;
+}
+#mapInformationDetailsLayer {
+    position: absolute; top: 0; left: 0;
     width: inherit; height: inherit;
     background-color: rgba(0,0,0,0.5);
 }
-#mapPick {
-    position: absolute;
-    top: -33px;
+/* Map Information Detail Texts */
+.mapInformationDetailWrapper {
+    position: absolute; left: var(--mapInformationDetailsTextLeft);
     color: white;
-    font-size: 24px;
-    left: 15px;
-}
-#mapNameWrapper {
-    display: inline-block;
-    position:absolute;
-    bottom: 15px; left: 15px;
-	margin:auto;
-    white-space: nowrap;
+    width: var(--mapInformationDetailWrapperWidth);
     overflow: hidden;
-    width:420px; height:32px;
+    display: inline-block;
+    white-space: nowrap;
 }
-#mapName {
-    color: white;
+#mapInformationTitleWrapper {
+    top: 16px; 
     font-size: 30px;
-    position:relative;
+    height: 37px;
+}
+#mapInformationDifficultyAndMapperWrapper {
+    bottom: 16px;
+    font-size: 20px;
+    height: 25px;
+}
+.mapInformationDetailText {
     display:inline-block;
 	width:max-content;
 }
-.mapNameWrap {
-    transform: translate(420px);
-    animation: displaySlide 12s linear infinite;
+.mapInformationDetailTextWrap {
+    animation: mapInformationDetailTextWrap 12s linear infinite;
 }
-@keyframes displaySlide {
+@keyframes mapInformationDetailTextWrap {
     0% {transform: translate(0px);}
     11% {transform: translate(0px);}
-    80% { transform: translate(calc(-100% + 420px)); }
-    100% { transform: translate(calc(-100% + 420px)); }
+    80% { transform: translate(calc(-100% + var(--mapInformationDetailWrapperWidth))); }
+    100% { transform: translate(calc(-100% + var(--mapInformationDetailWrapperWidth))); }
 }
-#mapSet {
-    font-size: 24px;
-    color: white;
-    position: absolute;
-    bottom: 47px; left: 15px;
-}
+/* Map Stats */
 #mapStatsCS,
 #mapStatsAR,
 #mapStatsOD,
 #mapStatsLen,
 #mapStatsBPM,
 #mapStatsSR {
-    color: rgb(232,107,88);
+    color: white;
+    font-size: 28px;
 }
-.mapStatsLine { color: white; }
-#mapStatsCSAROD {
-    position: absolute;
-    bottom: 38px; left: 465px;
+.mapStatsLine { 
+    color: white; 
+    position: absolute; left: 641px;
     font-size: 20px;
     width: max-content;
 }
-#mapStatsLenBPMSR {
+#mapStatsCSAROD { bottom: 13px; }
+#mapStatsLenBPMSR { bottom: 46px;  }
+/* Map Information CSS Circles */
+#mapInformationCircles {
     position: absolute;
-    bottom: 15px; left: 465px;
-    width: max-content;
-    font-size: 20px;
+    left: 1119px;
+    bottom: 0;
+}
+.mapInformationBlankCircle {
+    position: absolute; right: -3px;
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    border-width: 3px;
+    border-style: solid;
+    border-color: white transparent transparent transparent;
+    background-color: rgb(12,12,12);
+}
+#mapInformationBlankCircle1 { 
+    right: -3.3px; bottom: 57px;
+    transform: translate(50%, -50%) rotate(-135deg);
+}
+#mapInformationBlankCircle2 { 
+    bottom: 0; 
+    transform: translate(50%, 50%) rotate(-45deg); 
 }
 
 /* Score Bar Section - Moving Score Bars*/
 #movingScoreBars {
 	position:absolute;
 	width:1920px;
-    top: 920px;
+    top: 900px;
     height:20px;
     transition: 0.5s ease-in-out;
 }
@@ -162,32 +211,34 @@
 #playScores {
     position:absolute;
 	width:1920px;
-    top: 945px;
+    top: 930px;
     height:12px;
     transition: 0.5s ease-in-out;
 }
 .playScore {
 	position: absolute;
-    font-family: FredokaO;
+    font-family: Futurist;
     transition: ease-in-out 500ms;
-    font-size: 35px;
+    font-size: 28px;
+    color: white;
 }
-#playScoreRed {
-	right: 970px;	
-	color: var(--red);
-}
-#playScoreBlue {
-	left: 970px;	
-	color: var(--blue);
+#playScoreRed { right: 965px; }
+#playScoreBlue { left: 965px; }
+
+/* Dance shake */
+#danceShake {
+    position: absolute; bottom: 20px; right: 40px;
+    transition: ease-in-out 500ms;
 }
 
 /* Chat */
 #chatDisplay {
     position: absolute;
     bottom: 0; right: 0;
-    width: 590px; height: 150px;
+    width: 590px; height: 174px;
     background-color: rgba(0,0,0,0.5);
-    font-family: "QTV-B", Helvetica, sans-serif;
+    font-family: "FuturistBold"; font-size: 18px;
+    letter-spacing: 0.5px;
     overflow-x: hidden; overflow-y: scroll;
 	padding: 5px 12px;
     transition: ease-in-out 500ms;
@@ -217,7 +268,7 @@
 	overflow: hidden;
 }
 /* Colours Taken From https://github.com/VictimCrasher/static/tree/master/WaveTournament */
-.unknown { color: yellow; }
+.unknown { color: #66ff94; }
 .bot { color: #FF66AA; }
 .left { color: var(--red); }
 .right { color: var(--blue); }

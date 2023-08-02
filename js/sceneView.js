@@ -1,5 +1,3 @@
-let apiKey = getAPIKey();
-
 // Socket Events
 // Credits: VictimCrasher - https://github.com/VictimCrasher/static/tree/master/WaveTournament
 let socket = new ReconnectingWebSocket("ws://" + location.host + "/ws");
@@ -32,11 +30,16 @@ let currentBestOf;
 let currentStarRed;
 let currentStarBlue;
 
+// Map Details
+let mapInformation = document.getElementById("mapInformation")
+let mapModIdentifier = document.getElementById("mapModIdentifier")
+let mapModIdentifierCircle = document.getElementById("mapModIdentifierCircle")
+let mapInformationDetails = document.getElementById("mapInformationDetails")
+let mapInformationTitle = document.getElementById("mapInformationTitle")
+let mapInformationDifficultyAndMapper = document.getElementById("mapInformationDifficultyAndMapper")
+let mapInformationDifficulty = document.getElementById("mapInformationDifficulty")
+let mapInformationMapper = document.getElementById("mapInformationMapper")
 // Map Info
-let mapInformation = document.getElementById("mapInformation");
-let mapName = document.getElementById("mapName");
-let mapSetMapper = document.getElementById("mapSetMapper");
-
 let mapStatsCS = document.getElementById("mapStatsCS");
 let mapStatsAR = document.getElementById("mapStatsAR");
 let mapStatsOD = document.getElementById("mapStatsOD");
@@ -45,13 +48,17 @@ let mapStatsBPM = document.getElementById("mapStatsBPM");
 let mapStatsSR = document.getElementById("mapStatsSR");
 let currentMapID;
 
+// Circles
+let mapInformationBlankCircle1 = document.getElementById("mapInformationBlankCircle1")
+let mapInformationBlankCircle2 = document.getElementById("mapInformationBlankCircle2")
+
 // Map Selection
 let isCurrentlyMappoolPage = false;
 let isAutoPickedMap = false;
 let isPickedMap = false;
 
 // Score Info
-let currentScoreVisibility = true;
+let currentScoreVisibility;
 let movingScoreBars = document.getElementById("movingScoreBars");
 let movingScoreBarRed = document.getElementById("movingScoreBarRed");
 let movingScoreBarBlue = document.getElementById("movingScoreBarBlue");
@@ -61,12 +68,13 @@ let playScoreBlue = document.getElementById("playScoreBlue");
 let currentScoreRed;
 let currentScoreBlue;
 let animation = {
-    playScoreRed:  new CountUp('playScoreRed', 0, 0, 0, .2, {useEasing: true, useGrouping: true,   separator: ",", decimal: "." }),
-    playScoreBlue:  new CountUp('playScoreBlue', 0, 0, 0, .2, {useEasing: true, useGrouping: true,   separator: " ", decimal: "." }),
+    playScoreRed:  new CountUp('playScoreRed', 0, 0, 0, .2, {useEasing: true, useGrouping: true, separator: ",", decimal: "." }),
+    playScoreBlue:  new CountUp('playScoreBlue', 0, 0, 0, .2, {useEasing: true, useGrouping: true, separator: ",", decimal: "." }),
 }
 
 // Chat
 let chatDisplay = document.getElementById("chatDisplay");
+let danceShake = document.getElementById("danceShake")
 let chatLen = 0;
 let chatColour;
 
@@ -92,7 +100,6 @@ let bluePick = document.getElementById("bluePick");
 let removeSelection = document.getElementById("removeSelection");
 let protectCount = 0;
 
-let mapPicker = document.getElementById("mapPicker");
 let mapStatsIndiv = document.getElementsByClassName("mapStatsIndiv");
 
 // Map Display
@@ -202,12 +209,20 @@ socket.onmessage = event => {
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Map Info ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     if (currentMapID !== data.menu.bm.id) {
         currentMapID = data.menu.bm.id;
-        mapInformation.style.backgroundImage = `url("https://assets.ppy.sh/beatmaps/${data.menu.bm.set}/covers/cover.jpg")`;
-        mapName.innerText = `${data.menu.bm.metadata.artist} - ${data.menu.bm.metadata.title} [${data.menu.bm.metadata.difficulty}]`
-        if (mapName.getBoundingClientRect().width > 430) mapName.classList.add("mapNameWrap")
-        else mapName.classList.remove("mapNameWrap")
-        mapSetMapper.innerText = data.menu.bm.metadata.mapper;
-
+        // Reset map mod identifier
+        mapModIdentifier.innerText = "NP"
+        // Map Background
+        mapInformationDetails.style.backgroundImage = `url("https://assets.ppy.sh/beatmaps/${data.menu.bm.set}/covers/cover.jpg")`
+        // Map Title
+        mapInformationTitle.innerText = `${data.menu.bm.metadata.artist.toUpperCase()} - ${data.menu.bm.metadata.title.toUpperCase()}`
+        if (mapInformationTitle.getBoundingClientRect().width > 444) mapInformationTitle.classList.add("mapInformationDetailTextWrap")
+        else mapInformationTitle.classList.remove("mapInformationDetailTextWrap")
+        // Map Difficulty and Mapper
+        mapInformationDifficulty.innerText = `[${data.menu.bm.metadata.difficulty.toUpperCase()}]`
+        mapInformationMapper.innerText = data.menu.bm.metadata.mapper.toUpperCase()
+        if (mapInformationDifficultyAndMapper.getBoundingClientRect().width > 444) mapInformationDifficultyAndMapper.classList.add("mapInformationDetailTextWrap")
+        else mapInformationDifficultyAndMapper.classList.remove("mapInformationDetailTextWrap")
+        
         let getMaps = new Promise((resolve, reject) => {
             let mapsArray = getAllMaps();
             resolve(mapsArray);  
@@ -223,14 +238,15 @@ socket.onmessage = event => {
                         // Map Stats
                         currentMap = mapsArray[i][j];
                         foundMapFromMappool = true;
+                        mapModIdentifier.innerText = `${currentMap.mod.toUpperCase()}${currentMap.order}`
                             
-                        mapStatsCS.innerText = Math.round((parseFloat(mapsArray[i][j].cs) + Number.EPSILON) * 100) / 100;
-                        mapStatsAR.innerText = Math.round((parseFloat(mapsArray[i][j].ar) + Number.EPSILON) * 100) / 100;
-                        mapStatsOD.innerText = Math.round((parseFloat(mapsArray[i][j].od) + Number.EPSILON) * 100) / 100;
+                        mapStatsCS.innerText = parseFloat(currentMap.cs).toFixed(1);
+                        mapStatsAR.innerText = parseFloat(currentMap.ar).toFixed(1);
+                        mapStatsOD.innerText = parseFloat(currentMap.od).toFixed(1);
 
-                        mapStatsLen.innerText = `${("0" + Math.floor(parseFloat(mapsArray[i][j].songLength) / 60)).slice(-2)}:${("0" + Math.floor(parseInt(mapsArray[i][j].songLength) % 60)).slice(-2)}`;
-                        mapStatsBPM.innerText = Math.round((parseFloat(mapsArray[i][j].bpm) + Number.EPSILON) * 100) / 100;
-                        mapStatsSR.innerText = Math.round((parseFloat(mapsArray[i][j].difficultyrating) + Number.EPSILON) * 100) / 100;
+                        mapStatsLen.innerText = `${("0" + Math.floor(parseInt(currentMap.songLength) / 60)).slice(-2)}:${("0" + Math.floor(parseInt(currentMap.songLength) % 60)).slice(-2)}`;
+                        mapStatsBPM.innerText = Math.round((parseFloat(currentMap.bpm) + Number.EPSILON) * 100) / 100;
+                        mapStatsSR.innerText = parseFloat(currentMap.difficultyrating).toFixed(2);
 
                         if (isCurrentlyMappoolPage && !isAutoPickedMap && !isPickedMap) {
                             document.getElementById(currentMap.beatmapID).click();
@@ -243,32 +259,18 @@ socket.onmessage = event => {
             }
 
             if (!foundMapFromMappool) {
-                mapStatsCS.innerText = data.menu.bm.stats.CS;
-                mapStatsAR.innerText = data.menu.bm.stats.AR;
-                mapStatsOD.innerText = data.menu.bm.stats.OD;
-                requestLengthData(currentMapID, getAPIKey());
-                
+                // CS / AR / OD / SR
+                mapStatsCS.innerText = data.menu.bm.stats.CS.toFixed(1);
+                mapStatsAR.innerText = data.menu.bm.stats.AR.toFixed(1);
+                mapStatsOD.innerText = data.menu.bm.stats.OD.toFixed(1);
+                mapStatsSR.innerText = data.menu.bm.stats.SR.toFixed(2); 
+                // BPM
                 if (data.menu.bm.stats.BPM.max - data.menu.bm.stats.BPM.min > 0) { 
                     mapStatsBPM.innerText = `${data.menu.bm.stats.BPM.min} - ${data.menu.bm.stats.BPM.max }`; 
                 }   else { mapStatsBPM.innerText = data.menu.bm.stats.BPM.min; }
-
-                mapStatsSR.innerText = data.menu.bm.stats.SR; 
-            }
-
-            function requestLengthData(beatmapID, apiKey) {
-                let request = new XMLHttpRequest();
-                request.open(
-                    "GET",
-                    `https://osu.ppy.sh/api/get_beatmaps?k=${apiKey}&b=${beatmapID}`,
-                    true
-                );
-                request.onload = function() {
-                    let mapData = JSON.parse(this.response);
-                    if (request.status >= 200 && request.status < 400) {
-                        mapData.forEach(map => { mapStatsLen.innerText = `${("0" + Math.floor(map.total_length / 60)).slice(-2)}:${("0" + Math.floor(map.total_length % 60)).slice(-2)}`; })
-                    }
-                }
-                request.send();
+                // LEN
+                let currentLengthSeconds = Math.round(data.menu.bm.time.full / 1000)
+                mapStatsLen.innerText = `${("0" + Math.floor(parseInt(currentLengthSeconds) / 60)).slice(-2)}:${("0" + Math.floor(parseInt(currentLengthSeconds) % 60)).slice(-2)}`;
             }
         })
     }
@@ -279,6 +281,7 @@ socket.onmessage = event => {
         if (currentScoreVisibility) {
             chatDisplay.style.bottom = "-80px";
             chatDisplay.style.opacity = 0;
+            danceShake.style.right = "40px"
             if (ipcState != 4) {
                 movingScoreBars.style.opacity = 1;
                 playScores.style.opacity = 1;
@@ -289,6 +292,7 @@ socket.onmessage = event => {
         } else {
             chatDisplay.style.bottom = 0;
             chatDisplay.style.opacity = 1;
+            danceShake.style.right = "630px"
             movingScoreBars.style.opacity = 0;
             playScores.style.opacity = 0;
         }
@@ -303,20 +307,59 @@ socket.onmessage = event => {
         animation.playScoreBlue.update(currentScoreBlue);
 
         if (currentScoreRed > currentScoreBlue) {
-            playScoreRed.style.fontSize = "45px";
-            playScoreBlue.style.fontSize = "30px";
-            movingScoreBarRed.style.width = ((currentScoreRed - currentScoreBlue) / 300000 * 960) + "px";
+            // Fonts
+            playScoreRed.style.fontSize = "40px"
+            playScoreRed.style.fontFamily = "FuturistBold"
+            playScoreBlue.style.fontSize = "28px"
+            playScoreBlue.style.fontFamily = "Futurist"
+
+            // Colours
+            playScoreRed.style.color = "var(--red)"
+            playScoreBlue.style.color = "white"
+
+            // Line Heights
+            playScoreRed.style.lineHeight = "43px"
+            playScoreBlue.style.lineHeight = "none"
+
+            // Moving Score Bars
+            movingScoreBarRed.style.width = ((currentScoreRed - currentScoreBlue) / 900000 * 960) + "px";
             movingScoreBarBlue.style.width = 0;
         } else if (currentScoreRed == currentScoreBlue) {
-            playScoreRed.style.fontSize = "35px";
-            playScoreBlue.style.fontSize = "35px";
+            // Fonts
+            playScoreRed.style.fontSize = "28px"
+            playScoreRed.style.fontFamily = "Futurist"
+            playScoreBlue.style.fontSize = "28px"
+            playScoreBlue.style.fontFamily = "Futurist"
+
+            // Colours
+            playScoreRed.style.color = "white"
+            playScoreBlue.style.color = "white"
+
+            // Line Heights
+            playScoreRed.style.lineHeight = "none"
+            playScoreBlue.style.lineHeight = "none"
+
+            // Moving Score Bars
             movingScoreBarRed.style.width = 0
             movingScoreBarBlue.style.width = 0;
         } else {
-            playScoreRed.style.fontSize = "35px";
-            playScoreBlue.style.fontSize = "45px";
+            // Fonts
+            playScoreRed.style.fontSize = "28px"
+            playScoreRed.style.fontFamily = "Futurist"
+            playScoreBlue.style.fontSize = "40px"
+            playScoreBlue.style.fontFamily = "FuturistBold"
+
+            // Colours
+            playScoreRed.style.color = "white"
+            playScoreBlue.style.color = "var(--blue)"
+
+            // Line Heights
+            playScoreRed.style.lineHeight = "none"
+            playScoreBlue.style.lineHeight = "43px"
+            
+            // Moving Score Bars
             movingScoreBarRed.style.width = 0;
-            movingScoreBarBlue.style.width = ((currentScoreBlue - currentScoreRed) / 300000 * 960) + "px";
+            movingScoreBarBlue.style.width = ((currentScoreBlue - currentScoreRed) / 900000 * 960) + "px";
         }
     }
 
@@ -403,96 +446,32 @@ function mapClickEvent() {
     else if (redProtect.selected) { this.appendChild(mapText); mapText.style.backgroundColor = "rgba(0,0,0,0)"; this.style.outline = `4px dashed ${leftColour}`; }
     else if (blueProtect.selected) { this.appendChild(mapText); mapText.style.backgroundColor = "rgba(0,0,0,0)"; this.style.outline = `4px dashed ${rightColour}`; }
     else if (redPick.selected) { 
+        mapInformationBlankCircle1.style.borderColor = "var(--red) rgba(12,12,12) rgba(12,12,12) rgba(12,12,12)"
+        mapInformationBlankCircle2.style.borderColor = "var(--red) rgba(12,12,12) rgba(12,12,12) rgba(12,12,12)"
+        mapInformation.style.borderColor = "var(--red)"
+        mapInformation.style.backgroundImage = "linear-gradient(to bottom right, rgba(0,0,0,0), #ffa6ca05, #ffa6ca80)"
+        mapModIdentifier.style.backgroundColor = "var(--red)"
+        mapModIdentifier.style.color = "#da427e"
+        mapModIdentifierCircle.style.backgroundColor = "var(--red)"
+        
         mapText.innerText = `Picked by ${currentTeamRedName}`;
-        mapPicker.style.color = leftColour;
-        mapPicker.innerText = currentTeamRedName;
         for (var i = 0; i < mapStatsIndiv.length; i++) { mapStatsIndiv[i].style.color = leftColour; }
         isPickedMap = true;
         this.appendChild(mapText);
     }
     else if (bluePick.selected) { 
+        mapInformationBlankCircle1.style.borderColor = "var(--blue) rgba(12,12,12) rgba(12,12,12) rgba(12,12,12)"
+        mapInformationBlankCircle2.style.borderColor = "var(--blue) rgba(12,12,12) rgba(12,12,12) rgba(12,12,12)"
+        mapInformation.style.borderColor = "var(--blue)"
+        mapInformation.style.backgroundImage = "linear-gradient(to bottom right, rgba(0,0,0,0), #88d1fb05, #88d1fb80)"
+        mapModIdentifier.style.backgroundColor = "var(--blue)"
+        mapModIdentifier.style.color = "#378bbc"
+        mapModIdentifierCircle.style.backgroundColor = "var(--blue)"
+
         mapText.innerText = `Picked by ${currentTeamBlueName}`; 
-        mapPicker.style.color = rightColour;
-        mapPicker.innerText = currentTeamBlueName;
         for (var i = 0; i < mapStatsIndiv.length; i++) mapStatsIndiv[i].style.color = rightColour
         isPickedMap = true;
         this.appendChild(mapText);
-    }
-
-
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Map Display ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    if (mapDisplayMapContainer.classList.contains("mapDisplayMapContainerPulseRed")) { mapDisplayMapContainer.classList.remove("mapDisplayMapContainerPulseRed"); }
-    if (mapDisplayMapContainer.classList.contains("mapDisplayMapContainerPulseBlue")) { mapDisplayMapContainer.classList.remove("mapDisplayMapContainerPulseBlue"); }
-
-    if (!removeSelection.selected) {
-        let getMaps = new Promise((resolve, reject) => {
-            let mapsArray = getAllMaps();
-            resolve(mapsArray);  
-        })
-        getMaps.then((mapsArray) => {
-            for (var i = 0; i < mapsArray.length; i++) {
-                for (var j = 0; j < mapsArray[i].length; j++) {
-                    if (mapsArray[i][j].beatmapID == this.id) {
-                        foundMapFromMappool = true;
-                        // Displaying Map Display Yext
-                        let mapChooserTeamText = "";
-                        if (redBan.selected || blueBan.selected) mapChooserTeamText = "Banned By "
-                        else if (redPick.selected || bluePick.selected) mapChooserTeamText = "Picked By "
-                        else if (redProtect.selected || blueProtect.selected) mapChooserTeamText = "Protected By "
-    
-                        if (redBan.selected || redPick.selected || redProtect.selected) {
-                            mapDisplayMapContainer.classList.add("mapDisplayMapContainerPulseRed");
-                            mapDisplayMapContainer.style.borderColor = leftColour;
-                            mapText.style.color = leftColour;
-                            mapChooserTeamText += currentTeamRedName;
-                            mapChooserTeam.style.color = leftColour;
-                            if (blueProtect.selected) mapDisplayMapContainer.style.borderStyle = "dashed"
-                            else mapDisplayMapContainer.style.borderStyle = "solid"
-                        } else if (blueBan.selected || bluePick.selected || blueProtect.selected) {
-                            mapDisplayMapContainer.classList.add("mapDisplayMapContainerPulseBlue"); 
-                            mapDisplayMapContainer.style.borderColor = rightColour;
-                            mapText.style.color = rightColour;
-                            mapChooserTeamText += currentTeamBlueName;
-                            mapChooserTeam.style.color = rightColour;
-                            if (blueProtect.selected) mapDisplayMapContainer.style.borderStyle = "dashed"
-                            else mapDisplayMapContainer.style.borderStyle = "solid"
-                        }
-                        mapChooserTeam.innerText = mapChooserTeamText;
-    
-                        // Map Display Container
-                        mapDisplayMapImage.style.backgroundImage = `url("${mapsArray[i][j].imgURL}")`;
-                        mapDisplayMapTitle.innerText = `${mapsArray[i][j].artist} - ${mapsArray[i][j].songName}`;
-                        mapDisplayMapDifficultyName.innerText = mapsArray[i][j].difficultyname;
-                        mapDisplayMapMapperName.innerText = mapsArray[i][j].mapper;
-    
-                        mapDisplayMapMod.setAttribute("src",`mods/${mapsArray[i][j].mod}.png`);
-                        mapDisplayMapOn();
-                        setTimeout(() => {
-                            mapDisplay.style.opacity = "0";
-                            setTimeout(() => mapDisplay.style.display = "none" , 500)
-                            if (redPick.selected || bluePick.selected)toSpectatorView()
-                        }, 5000);
-
-                        if (mapDisplayMapTitle.getBoundingClientRect().width >= 1000) mapDisplayMapTitle.classList.add("mapDisplayMapTitleWrap");
-                        else mapDisplayMapTitle.classList.remove("mapDisplayMapTitleWrap");
-                        if (mapDisplayMapDifficultyName.getBoundingClientRect().width >= 340) mapDisplayMapDifficultyName.classList.add("mapDisplayMapDifficultyWrap");
-                        else mapDisplayMapDifficultyName.classList.remove("mapDisplayMapDifficultyWrap");
-                        if (mapDisplayMapMapperName.getBoundingClientRect().width >= 340) mapDisplayMapMapperName.classList.add("mapDisplayMapMapperWrap")
-                        else mapDisplayMapMapperName.classList.remove("mapDisplayMapMapperWrap")
-                    
-                        if (redBan.selected) blueBan.selected = true
-                        else if (blueBan.selected) redBan.selected = true
-                        else if (redPick.selected) bluePick.selected = true
-                        else if (bluePick.selected) redPick.selected = true
-
-                        if (redProtect.selected && protectCount >= 2) { blueBan.selected = true;}
-                        else if (redProtect.selected) { blueProtect.selected = true; }
-                        else if (blueProtect.selected && protectCount >= 2) { redBan.selected = true; }
-                        else if (blueProtect.selected) { redProtect.selected = true; }
-                    }
-                }
-            }
-        })
     }
 }
 
